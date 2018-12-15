@@ -9,10 +9,28 @@ This file contain all the necessary instructions to build the Xilinx container.
 Installation files must be placed in the `installers/` directory.
 
 ## First run
-
-To build and run your docker for the first time just do:
+On your mac os, to build and run your docker for the first time just do:
 
 `make`
+
+When the container has been done, there are some steps to do. You need to install socat, a unix tool that creates two bidirectional streams between two endpoints. The goal is to create a connection between the docker container that runs a graphical application and the X window system on our OS X host operating system. So lets begin by creating a bridge between a network socket with a TCP listener on port 6000 (the default port of the X window system) and the X window server on my OS X host.
+
+`brew install socat`
+`socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\"`
+
+To run this on Mac OS X you will need Xquartz which, according to the website, is a project that offers the X Window System on the OS X operating system. You can either install by downloading a dmg from the website or the command line through homebrew. 
+
+`brew install xquartz`
+
+Once that is done you can start Xquartz.
+
+`open -a Xquartz`
+
+A white terminal window will pop up. Now open up the preferences from the top menu and go to the last tab ‘security’. There you need to make sure the “allow connections from network clients” is checked “on”.
+
+After that, you can run the container using below command:
+
+`make run`
 
 During the first run of the container you will have to compile Vivado or SDAccel, to do so just follow the instructions provided in the GUI installer. The installer can be run using :
 
